@@ -11,6 +11,17 @@ import (
 	"time"
 )
 
+const countUsers = `-- name: CountUsers :one
+SELECT count(*) FROM users
+`
+
+func (q *Queries) CountUsers(ctx context.Context) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countUsers)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const createUser = `-- name: CreateUser :one
 INSERT INTO users (first_name, middle_name, last_name, date_of_birth) VALUES ($1,$2,$3,$4)
 RETURNING id, first_name, middle_name, last_name, date_of_birth
@@ -39,6 +50,15 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		&i.DateOfBirth,
 	)
 	return i, err
+}
+
+const deleteUser = `-- name: DeleteUser :exec
+DELETE FROM users WHERE id = $1
+`
+
+func (q *Queries) DeleteUser(ctx context.Context, id int64) error {
+	_, err := q.db.ExecContext(ctx, deleteUser, id)
+	return err
 }
 
 const getUser = `-- name: GetUser :one
@@ -98,4 +118,33 @@ func (q *Queries) ListUsers(ctx context.Context, arg ListUsersParams) ([]User, e
 		return nil, err
 	}
 	return items, nil
+}
+
+const updateUserBios = `-- name: UpdateUserBios :exec
+UPDATE users 
+SET 
+  first_name = $1,
+  middle_name = $2,
+  last_name = $3,
+  date_of_birth = $4
+WHERE id = $5
+`
+
+type UpdateUserBiosParams struct {
+	FirstName   string         `json:"first_name"`
+	MiddleName  sql.NullString `json:"middle_name"`
+	LastName    string         `json:"last_name"`
+	DateOfBirth time.Time      `json:"date_of_birth"`
+	ID          int64          `json:"id"`
+}
+
+func (q *Queries) UpdateUserBios(ctx context.Context, arg UpdateUserBiosParams) error {
+	_, err := q.db.ExecContext(ctx, updateUserBios,
+		arg.FirstName,
+		arg.MiddleName,
+		arg.LastName,
+		arg.DateOfBirth,
+		arg.ID,
+	)
+	return err
 }

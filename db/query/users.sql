@@ -22,7 +22,7 @@ OFFSET $2;
 -- name: CountUsers :one
 SELECT count(*) FROM users;
 
--- name: UpdateUserBios :exec
+-- name: UpdateUser :exec
 UPDATE users 
 SET 
   first_name = $1,

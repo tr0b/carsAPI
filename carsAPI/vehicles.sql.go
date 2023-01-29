@@ -124,7 +124,7 @@ func (q *Queries) ListVehicles(ctx context.Context, arg ListVehiclesParams) ([]V
 	return items, nil
 }
 
-const updateVehicleBios = `-- name: UpdateVehicleBios :exec
+const updateVehicle = `-- name: UpdateVehicle :exec
 UPDATE vehicles 
 SET 
   name = $1,
@@ -134,7 +134,7 @@ SET
 WHERE id = $5
 `
 
-type UpdateVehicleBiosParams struct {
+type UpdateVehicleParams struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	Price       string `json:"price"`
@@ -142,8 +142,8 @@ type UpdateVehicleBiosParams struct {
 	ID          int64  `json:"id"`
 }
 
-func (q *Queries) UpdateVehicleBios(ctx context.Context, arg UpdateVehicleBiosParams) error {
-	_, err := q.db.ExecContext(ctx, updateVehicleBios,
+func (q *Queries) UpdateVehicle(ctx context.Context, arg UpdateVehicleParams) error {
+	_, err := q.db.ExecContext(ctx, updateVehicle,
 		arg.Name,
 		arg.Description,
 		arg.Price,

@@ -120,7 +120,7 @@ func (q *Queries) ListUsers(ctx context.Context, arg ListUsersParams) ([]User, e
 	return items, nil
 }
 
-const updateUserBios = `-- name: UpdateUserBios :exec
+const updateUser = `-- name: UpdateUser :exec
 UPDATE users 
 SET 
   first_name = $1,
@@ -130,7 +130,7 @@ SET
 WHERE id = $5
 `
 
-type UpdateUserBiosParams struct {
+type UpdateUserParams struct {
 	FirstName   string         `json:"first_name"`
 	MiddleName  sql.NullString `json:"middle_name"`
 	LastName    string         `json:"last_name"`
@@ -138,8 +138,8 @@ type UpdateUserBiosParams struct {
 	ID          int64          `json:"id"`
 }
 
-func (q *Queries) UpdateUserBios(ctx context.Context, arg UpdateUserBiosParams) error {
-	_, err := q.db.ExecContext(ctx, updateUserBios,
+func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) error {
+	_, err := q.db.ExecContext(ctx, updateUser,
 		arg.FirstName,
 		arg.MiddleName,
 		arg.LastName,

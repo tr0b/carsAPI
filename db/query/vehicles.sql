@@ -24,7 +24,7 @@ OFFSET $2;
 -- name: CountVehicles :one
 SELECT count(*) FROM vehicles;
 
--- name: UpdateVehicleBios :exec
+-- name: UpdateVehicle :exec
 UPDATE vehicles 
 SET 
   name = $1,

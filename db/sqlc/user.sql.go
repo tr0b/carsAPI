@@ -3,7 +3,7 @@
 //   sqlc v1.15.0
 // source: user.sql
 
-package carsAPI
+package db
 
 import (
 	"context"

@@ -3,7 +3,7 @@
 //   sqlc v1.15.0
 // source: invoice_item.sql
 
-package carsAPI
+package db
 
 import (
 	"context"
